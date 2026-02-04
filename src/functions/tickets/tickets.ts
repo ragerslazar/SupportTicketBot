@@ -1,4 +1,4 @@
-import {CHANNEL_SETUP, MOD_ROLE_ID, SUPPORT_CATEGORY} from "../../../var";
+import {CHANNEL_SETUP, MOD_ROLE_ID, SUPPORT_CATEGORY} from "../../../config.ts";
 import {
     ActionRowBuilder,
     ButtonBuilder,
@@ -9,10 +9,7 @@ import {
     TextChannel
 } from "discord.js";
 
-import {client} from "../../index";
-
-export async function setupTicketMessage() {
-    const channel = client.channels.cache.get(CHANNEL_SETUP) as TextChannel;
+export async function setupTicketMessage(target_channel: TextChannel) {
     const message = new EmbedBuilder()
         .setColor(0x0099ff)
         .setTitle('✉️ Tickets')
@@ -27,14 +24,14 @@ export async function setupTicketMessage() {
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(create_ticket);
 
-    await channel.send({
+    await target_channel.send({
         embeds: [message],
         components: [row]
     });
 }
 
 export async function checkExistingTickets(interaction: ButtonInteraction) {
-    const category = client.channels.cache.get(SUPPORT_CATEGORY) as CategoryChannel;
+    const category = interaction.guild!.channels.cache.get(SUPPORT_CATEGORY) as CategoryChannel;
     if (!category) {
         console.error("Categorie de support introuvable !")
         return;

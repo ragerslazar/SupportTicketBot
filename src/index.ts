@@ -1,13 +1,17 @@
-import {Client, GatewayIntentBits,InteractionDeferReplyOptions, MessageFlags} from 'discord.js';
-import {TOKEN} from "../var";
-import {loadEvents} from "./handlers/eventHandler";
+import {Client, GatewayIntentBits} from 'discord.js';
+import {MONGODB_URI, TOKEN} from "../config.ts";
+import {eventHandler} from "./handlers/eventHandler.ts";
+import {commandHandler} from "./handlers/commandHandler.ts";
+import mongoose from 'mongoose';
 
 export const client = new Client({ intents:
         [GatewayIntentBits.Guilds] });
 
-export const deferOptions: InteractionDeferReplyOptions = {
-    flags: MessageFlags.Ephemeral
-};
+commandHandler(client);
+eventHandler(client);
 
-loadEvents()
-client.login(TOKEN);
+(async () => {
+    await mongoose.connect(MONGODB_URI);
+    console.log(`MongoDB Connected`);
+    client.login(TOKEN);
+})();

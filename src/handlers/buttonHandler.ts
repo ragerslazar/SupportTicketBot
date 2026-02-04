@@ -1,6 +1,7 @@
 import {ButtonInteraction} from "discord.js";
-import {deferOptions} from "../index";
-import {checkExistingTickets} from "../functions/tickets/tickets";
+import {deferOptions} from "../utils/deferOptions.ts";
+import {checkExistingTickets} from "../functions/tickets/tickets.ts";
+
 
 export async function buttonHandler(interaction: ButtonInteraction) {
     if (interaction.customId === "create_ticket") {
@@ -9,8 +10,12 @@ export async function buttonHandler(interaction: ButtonInteraction) {
 
     } else if (interaction.customId === "close_ticket") {
         await interaction.reply("❌ Fermeture du ticket dans 5 secondes...");
-        setTimeout(async ()=> {
-            await interaction.channel!.delete();
-        }, 5000);
+        try {
+            setTimeout(async ()=> {
+                await interaction.channel!.delete();
+            }, 5000);
+        } catch (error) {
+            console.error(error);
+        }
     }
 }

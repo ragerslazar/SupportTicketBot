@@ -1,5 +1,5 @@
 import {REST, Routes} from 'discord.js';
-import {TOKEN, BOT_ID} from "../../config.ts";
+import {TOKEN, BOT_ID, GUILD_ID} from "../../config.ts";
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from "node:url";
@@ -27,7 +27,7 @@ const rest = new REST().setToken(TOKEN);
     try {
         console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
-        const data = await rest.put(Routes.applicationCommands(BOT_ID), { body: commands });
+        const data = await rest.put(Routes.applicationGuildCommands(BOT_ID, GUILD_ID), { body: commands });
 
         // @ts-ignore
         console.log(`Successfully reloaded ${data.length} application (/) commands.`);
