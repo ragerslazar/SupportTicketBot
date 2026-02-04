@@ -1,21 +1,25 @@
-import {ButtonInteraction} from "discord.js";
-import {deferOptions} from "../utils/deferOptions.ts";
-import {checkExistingTickets} from "../functions/tickets/tickets.ts";
+/// <reference path="../@types/discord.d.ts" />
+import { fileURLToPath, pathToFileURL } from "node:url";
+import path from "node:path";
+import fs from "node:fs";
+import {Client, Collection} from "discord.js";
 
+export async function buttonHandler(client: Client) {
+    client.buttons = new Collection();
 
-export async function buttonHandler(interaction: ButtonInteraction) {
-    if (interaction.customId === "create_ticket") {
-        await interaction.deferReply(deferOptions);
-        await checkExistingTickets(interaction);
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
 
-    } else if (interaction.customId === "close_ticket") {
-        await interaction.reply("❌ Fermeture du ticket dans 5 secondes...");
-        try {
-            setTimeout(async ()=> {
-                await interaction.channel!.delete();
-            }, 5000);
-        } catch (error) {
-            console.error(error);
+    const foldersPath = path.join(__dirname, '../buttons');
+    const commandFiles = fs.readdirSync(foldersPath).filter((file) => file.endsWith('.ts'));
+
+    for (const file of commandFiles) {
+        const filePath = path.join(foldersPath, file);
+        const button = await import(pathToFileURL(filePath).href);
+        if ('data' in button.default && 'execute' in button.default) {
+            client.buttons.set(button.default.data.data.custom_id, button.default);
+        } else {
+            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
         }
     }
 }

@@ -1,12 +1,21 @@
-import {buttonHandler} from "../handlers/buttonHandler.ts";
-import {Events} from "discord.js";
+import {ButtonInteraction, ChatInputCommandInteraction, Events} from "discord.js";
 
 export default {
     name: Events.InteractionCreate,
     once: false,
-    async execute(interaction: any) {
+    async execute(interaction: ChatInputCommandInteraction | ButtonInteraction) {
         if (interaction.isButton()) {
-            await buttonHandler(interaction);
+            const button = await interaction.client.buttons.get(interaction.customId);
+            if (!button) {
+                console.error(`No button found.`);
+                return;
+            }
+
+            try {
+                await button.execute(interaction);
+            } catch (e) {
+                console.error(e);
+            }
         } else if (interaction.isChatInputCommand()) {
             const command = await interaction.client.commands.get(interaction.commandName);
             if (!command) {

@@ -11,6 +11,8 @@
 import {deferOptions} from "../utils/deferOptions.ts";
 import {setupTicketMessage} from "../functions/tickets/tickets.ts";
 import {test} from "../schemas/guildProfile.ts";
+import no_button from "../buttons/noButton.ts";
+import yes_button from "../buttons/yesButton.ts";
 
 export default {
         data: new SlashCommandBuilder()
@@ -54,26 +56,17 @@ export default {
                             .setTimestamp()
                             .setFooter({ text: 'MDTicketBot Support' });
 
-                        const yesButton = new ButtonBuilder()
-                            .setCustomId('yes__support_button')
-                            .setLabel('✅ Oui')
-                            .setStyle(ButtonStyle.Success);
 
-                        const noButton = new ButtonBuilder()
-                            .setCustomId('no_support_button')
-                            .setLabel('❌ Non')
-                            .setStyle(ButtonStyle.Danger);
-
-
+                        console.log("BUTTON SETUP TICKET", yes_button);
                         const closeRow = new ActionRowBuilder<ButtonBuilder>()
-                            .addComponents(yesButton, noButton);
+                            .addComponents(yes_button.data, no_button.data);
 
                         await interaction.channel!.send({
                                 embeds: [embed],
                                 components: [closeRow]
                         });
 
-                        await interaction.editReply("Pas si vite !");
+                        await interaction.deleteReply();
                 } else {
                         gprofile = new test({
                                 guildId: interaction.guildId,

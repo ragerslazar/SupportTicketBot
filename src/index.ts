@@ -3,12 +3,15 @@ import {MONGODB_URI, TOKEN} from "../config.ts";
 import {eventHandler} from "./handlers/eventHandler.ts";
 import {commandHandler} from "./handlers/commandHandler.ts";
 import mongoose from 'mongoose';
+import {buttonHandler} from "./handlers/buttonHandler.ts";
 
 export const client = new Client({ intents:
         [GatewayIntentBits.Guilds] });
 
-commandHandler(client);
 eventHandler(client);
+buttonHandler(client);
+commandHandler(client);
+
 
 (async () => {
     await mongoose.connect(MONGODB_URI);

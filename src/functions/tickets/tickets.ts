@@ -1,4 +1,4 @@
-import {CHANNEL_SETUP, MOD_ROLE_ID, SUPPORT_CATEGORY} from "../../../config.ts";
+import {MOD_ROLE_ID, SUPPORT_CATEGORY} from "../../../config.ts";
 import {
     ActionRowBuilder,
     ButtonBuilder,
@@ -9,6 +9,9 @@ import {
     TextChannel
 } from "discord.js";
 
+import createTicketButton from "../../buttons/createTicketButton.ts";
+import closeTicketButton from "../../buttons/closeTicketButton.ts";
+
 export async function setupTicketMessage(target_channel: TextChannel) {
     const message = new EmbedBuilder()
         .setColor(0x0099ff)
@@ -17,12 +20,8 @@ export async function setupTicketMessage(target_channel: TextChannel) {
         .setTimestamp()
         .setFooter({ text: 'MDTicketBot Support' });
 
-    const create_ticket = new ButtonBuilder()
-        .setCustomId('create_ticket')
-        .setLabel('📩 Créer un Ticket')
-        .setStyle(ButtonStyle.Primary);
 
-    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(create_ticket);
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(createTicketButton.data);
 
     await target_channel.send({
         embeds: [message],
@@ -70,13 +69,9 @@ export async function checkExistingTickets(interaction: ButtonInteraction) {
             .setTimestamp()
             .setFooter({ text: 'MDTicketBot Support' });
 
-        const closeTicketButton = new ButtonBuilder()
-            .setCustomId('close_ticket')
-            .setLabel('🔒 Fermer le ticket')
-            .setStyle(ButtonStyle.Danger);
 
         const closeRow = new ActionRowBuilder<ButtonBuilder>()
-            .addComponents(closeTicketButton);
+            .addComponents(closeTicketButton.data);
 
         await userTicketChannel.send({
             embeds: [ticketEmbed],
