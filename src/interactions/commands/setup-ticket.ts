@@ -1,16 +1,15 @@
  import {
         ActionRowBuilder,
-        ButtonBuilder, ButtonStyle,
-        CategoryChannel,
+        ButtonBuilder,
         ChannelType,
-        ChatInputCommandInteraction, EmbedBuilder,
+        ChatInputCommandInteraction, EmbedBuilder, MessageFlags,
         PermissionFlagsBits,
         SlashCommandBuilder,
         TextChannel
 } from "discord.js";
-import {deferOptions} from "../utils/deferOptions.ts";
-import {setupTicketMessage} from "../functions/tickets/tickets.ts";
-import {test} from "../schemas/guildProfile.ts";
+import {deferOptions} from "../../utils/deferOptions.ts";
+import {setupTicketMessage} from "../../functions/tickets.ts";
+import {guildProfile} from "../../schemas/guildProfile.ts";
 import no_button from "../buttons/noButton.ts";
 import yes_button from "../buttons/yesButton.ts";
 
@@ -41,9 +40,9 @@ export default {
                 }
                 await interaction.deferReply(deferOptions);
                 const target_channel: TextChannel = interaction.options.getChannel('channel')!;
-                const target_category: CategoryChannel = interaction.options.getChannel('category')!;
+                const target_category: string = interaction.options.getChannel('category')!.id;
 
-                let gprofile = await test.findOne({
+                let gprofile = await guildProfile.findOne({
                         guildId: interaction.guildId
                 });
 
@@ -57,28 +56,24 @@ export default {
                             .setFooter({ text: 'MDTicketBot Support' });
 
 
-                        console.log("BUTTON SETUP TICKET", yes_button);
                         const closeRow = new ActionRowBuilder<ButtonBuilder>()
                             .addComponents(yes_button.data, no_button.data);
 
                         await interaction.channel!.send({
                                 embeds: [embed],
-                                components: [closeRow]
+                                components: [closeRow],
                         });
 
                         await interaction.deleteReply();
                 } else {
-                        gprofile = new test({
+                        gprofile = new guildProfile({
                                 guildId: interaction.guildId,
-                                supportCategory: target_category
+                                supportCategoryId: target_category,
+                                channelCreateTicket: target_channel.id
                         });
-                        console.log(`Guild créée dans la DB : ${interaction.guildId}`);
                         await setupTicketMessage(target_channel);
                         await interaction.editReply("Setup message envoyé !");
                 }
-
                 await gprofile.save();
-
-
         }
 };

@@ -1,9 +1,13 @@
 import {Schema, model} from 'mongoose';
 
 const guildSchema = new Schema({
-    supportCategory: {
+    supportCategoryId: {
         type: String,
         required: true,
+    },
+    channelCreateTicket: {
+      type: String,
+      required: true,
     },
     guildId: {
         type: String,
@@ -13,4 +17,4 @@ const guildSchema = new Schema({
 
 }, {timestamps: true});
 
-export const test = model("guildProfile", guildSchema);
+export const guildProfile = model("guildProfile", guildSchema);

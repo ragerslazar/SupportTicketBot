@@ -10,7 +10,7 @@ export async function commandHandler(client: Client) {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
 
-    const foldersPath = path.join(__dirname, '../commands');
+    const foldersPath = path.join(__dirname, '../interactions/commands');
     const commandFiles = fs.readdirSync(foldersPath).filter((file) => file.endsWith('.ts'));
 
     for (const file of commandFiles) {

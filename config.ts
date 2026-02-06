@@ -1,4 +1,3 @@
-// require('dotenv').config({path: require('find-config')('.env')});
 import "dotenv/config"
 
 const TOKEN = process.env.TOKEN!;

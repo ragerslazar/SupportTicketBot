@@ -1,6 +1,6 @@
 import {ButtonBuilder, ButtonInteraction, ButtonStyle} from "discord.js";
-import {deferOptions} from "../utils/deferOptions.ts";
-import {checkExistingTickets} from "../functions/tickets/tickets.ts";
+import {deferOptions} from "../../utils/deferOptions.ts";
+import {checkExistingTickets} from "../../functions/tickets.ts";
 
 
 export default {

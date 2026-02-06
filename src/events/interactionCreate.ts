@@ -1,9 +1,14 @@
-import {ButtonInteraction, ChatInputCommandInteraction, Events} from "discord.js";
+import {
+    ButtonInteraction,
+    ChannelSelectMenuInteraction,
+    ChatInputCommandInteraction,
+    Events
+} from "discord.js";
 
 export default {
     name: Events.InteractionCreate,
     once: false,
-    async execute(interaction: ChatInputCommandInteraction | ButtonInteraction) {
+    async execute(interaction: ChatInputCommandInteraction | ButtonInteraction | ChannelSelectMenuInteraction ): Promise<void> {
         if (interaction.isButton()) {
             const button = await interaction.client.buttons.get(interaction.customId);
             if (!button) {
@@ -25,6 +30,18 @@ export default {
 
             try {
                 await command.execute(interaction);
+            } catch (error) {
+                console.error(error);
+            }
+        } else if (interaction.isChannelSelectMenu()) {
+            const channelSelectMenu = await interaction.client.channelSelectMenus.get(interaction.customId);
+            if (!channelSelectMenu) {
+                console.error(`No channel select menu found.`);
+                return;
+            }
+
+            try {
+                await channelSelectMenu.execute(interaction);
             } catch (error) {
                 console.error(error);
             }

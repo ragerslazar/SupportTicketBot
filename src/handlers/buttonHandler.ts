@@ -10,7 +10,7 @@ export async function buttonHandler(client: Client) {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
 
-    const foldersPath = path.join(__dirname, '../buttons');
+    const foldersPath = path.join(__dirname, '../interactions/buttons');
     const commandFiles = fs.readdirSync(foldersPath).filter((file) => file.endsWith('.ts'));
 
     for (const file of commandFiles) {
@@ -19,7 +19,7 @@ export async function buttonHandler(client: Client) {
         if ('data' in button.default && 'execute' in button.default) {
             client.buttons.set(button.default.data.data.custom_id, button.default);
         } else {
-            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+            console.log(`[WARNING] The button at ${filePath} is missing a required "data" or "execute" property.`);
         }
     }
 }
