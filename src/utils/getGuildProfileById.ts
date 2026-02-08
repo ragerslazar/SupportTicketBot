@@ -9,7 +9,7 @@ export async function getGuildProfileById(interaction: any) {
 
     if (!guildQuery) {
         await interaction.message.delete();
-        await interaction.reply({content: "Votre serveur n'a pas été enregistré par le bot. Veuillez utiliser `/setup-ticket`", flags: MessageFlags.Ephemeral});
+        await interaction.followUp({content: "Votre serveur n'a pas été enregistré par le bot. Veuillez utiliser la commande `/setup-ticket`", flags: MessageFlags.Ephemeral});
         throw new Error("guildProfile not found in database.");
     } else {
         return guildQuery;

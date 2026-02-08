@@ -13,7 +13,6 @@
   "dependencies": {
     "discord.js": "^14.25.1",
     "dotenv": "^17.2.3",
-    "find-config": "^1.0.0",
     "mongoose": "^9.1.5",
     "ts-node": "^10.9.2"
   },

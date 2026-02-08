@@ -12,21 +12,26 @@ import createTicketButton from "../interactions/buttons/createTicketButton.ts";
 import closeTicketButton from "../interactions/buttons/closeTicketButton.ts";
 import {getGuildProfileById} from "../utils/getGuildProfileById.ts";
 
-export async function setupTicketMessage(target_channel: TextChannel) {
-    const message = new EmbedBuilder()
-        .setColor(0x0099ff)
-        .setTitle('✉️ Tickets')
-        .setDescription('En cas de problèmes ou de questions, veuillez ouvrir un ticket.\n Un membre du staff vous répondra au plus vite.')
-        .setTimestamp()
-        .setFooter({ text: 'MDTicketBot Support' });
+export async function setupTicketMessage(target_channel: string, title: string, content: string, interaction: any): Promise<void> {
+    try {
+        const channel = interaction.guild!.channels.cache.get(target_channel) as TextChannel;
+        const message = new EmbedBuilder()
+            .setColor(0x0099ff)
+            .setTitle(title)
+            .setDescription(content)
+            .setTimestamp()
+            .setFooter({ text: 'MDTicketBot Support' });
 
 
-    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(createTicketButton.data);
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(createTicketButton.data);
 
-    await target_channel.send({
-        embeds: [message],
-        components: [row]
-    });
+        await channel.send({
+            embeds: [message],
+            components: [row]
+        });
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function checkExistingTickets(interaction: ButtonInteraction) {
@@ -48,14 +53,14 @@ export async function checkExistingTickets(interaction: ButtonInteraction) {
                 topic: `Pseudo discord de l'utilisateur: ${interaction.user.tag}`,
             });
 
-            userTicketChannel.permissionOverwrites.create(interaction.user.id, {
+            await userTicketChannel.permissionOverwrites.create(interaction.user.id, {
                 ViewChannel: true,
                 SendMessages: true,
                 ReadMessageHistory: true,
             })
             await interaction.editReply(`✅ Votre ticket <#${userTicketChannel.id}> a été crée !`)
 
-            await userTicketChannel.send(`<@${interaction.user.id}> <@&${MOD_ROLE_ID}>`)
+            await userTicketChannel.send(`<@${interaction.user.id}> <@&${MOD_ROLE_ID}>`);
 
             const ticketEmbed = new EmbedBuilder()
                 .setColor(0xff5555)
@@ -79,8 +84,6 @@ export async function checkExistingTickets(interaction: ButtonInteraction) {
             });
         }
     } catch (error) {
-        if (error instanceof Error) {
-            console.error(error.message);
-        }
+        throw error;
     }
 }

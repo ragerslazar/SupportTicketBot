@@ -1,4 +1,5 @@
-import {ButtonBuilder, ButtonInteraction, ButtonStyle} from "discord.js";
+import {ButtonBuilder, ButtonInteraction, ButtonStyle, DiscordAPIError, MessageFlags} from "discord.js";
+import {delay} from "../../utils/delay.ts";
 
 export default {
     data: new ButtonBuilder()
@@ -6,13 +7,12 @@ export default {
         .setLabel('🔒 Fermer le ticket')
         .setStyle(ButtonStyle.Danger),
     async execute(interaction: ButtonInteraction) {
-        await interaction.reply("❌ Fermeture du ticket dans 5 secondes...");
         try {
-            setTimeout(async ()=> {
-                await interaction.channel!.delete();
-            }, 5000);
+            await interaction.reply("❌ Fermeture du ticket dans 5 secondes...");
+            await delay(5000);
+            await interaction.channel!.delete();
         } catch (error) {
-            console.error(error);
+            throw error;
         }
     }
 }

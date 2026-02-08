@@ -7,11 +7,10 @@
         SlashCommandBuilder,
         TextChannel
 } from "discord.js";
-import {deferOptions} from "../../utils/deferOptions.ts";
-import {setupTicketMessage} from "../../functions/tickets.ts";
 import {guildProfile} from "../../schemas/guildProfile.ts";
 import no_button from "../buttons/noButton.ts";
 import yes_button from "../buttons/yesButton.ts";
+import modal from "../modals/setupTicket.ts"
 
 export default {
         data: new SlashCommandBuilder()
@@ -33,12 +32,12 @@ export default {
                     .addChannelTypes(ChannelType.GuildCategory)
             ),
 
-        async execute(interaction: ChatInputCommandInteraction) {
+        async execute(interaction: ChatInputCommandInteraction):Promise<void> {
                 if (!interaction.inGuild()) {
                         await interaction.reply("Cette commande ne peux être executée seulement sur un serveur.");
                         return;
                 }
-                await interaction.deferReply(deferOptions);
+
                 const target_channel: TextChannel = interaction.options.getChannel('channel')!;
                 const target_category: string = interaction.options.getChannel('category')!.id;
 
@@ -64,15 +63,14 @@ export default {
                                 components: [closeRow],
                         });
 
-                        await interaction.deleteReply();
+                        await interaction.reply({content: "Oops...", flags: MessageFlags.Ephemeral});
                 } else {
                         gprofile = new guildProfile({
                                 guildId: interaction.guildId,
                                 supportCategoryId: target_category,
                                 channelCreateTicket: target_channel.id
                         });
-                        await setupTicketMessage(target_channel);
-                        await interaction.editReply("Setup message envoyé !");
+                        await interaction.showModal(modal.data);
                 }
                 await gprofile.save();
         }

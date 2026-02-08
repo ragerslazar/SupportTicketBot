@@ -5,5 +5,6 @@ declare module "discord.js" {
         commands: Collection<any, any>;
         buttons: Collection<any, any>;
         channelSelectMenus: Collection<any, any>;
+        modals: Collection<any, any>;
     }
 }

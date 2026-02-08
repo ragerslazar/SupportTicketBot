@@ -9,7 +9,7 @@ export default {
         .setLabel('📩 Créer un Ticket')
         .setStyle(ButtonStyle.Primary),
 
-    async execute(interaction: ButtonInteraction) {
+    async execute(interaction: ButtonInteraction): Promise<void> {
         await interaction.deferReply(deferOptions);
         await checkExistingTickets(interaction);
     }

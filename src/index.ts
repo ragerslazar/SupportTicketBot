@@ -5,10 +5,12 @@ import {commandHandler} from "./handlers/commandHandler.ts";
 import mongoose from 'mongoose';
 import {buttonHandler} from "./handlers/buttonHandler.ts";
 import {channelSelectMenuHandler} from "./handlers/channelSelectMenuHandler.ts";
+import {modalHandler} from "./handlers/modalHandler.ts";
 
 export const client = new Client({ intents:
         [GatewayIntentBits.Guilds] });
 
+modalHandler(client);
 channelSelectMenuHandler(client);
 eventHandler(client);
 buttonHandler(client);
