@@ -1,4 +1,4 @@
-import {ButtonBuilder, ButtonInteraction, ButtonStyle, DiscordAPIError, MessageFlags} from "discord.js";
+import {ButtonBuilder, ButtonInteraction, ButtonStyle} from "discord.js";
 import {delay} from "../../utils/delay.ts";
 
 export default {

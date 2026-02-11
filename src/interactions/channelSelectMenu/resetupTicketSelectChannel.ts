@@ -7,7 +7,6 @@ import {
 
 import {getGuildProfileById} from "../../utils/getGuildProfileById.ts";
 import setupTicketSelectSupportCategory from "./resetupTicketSelectSupportCategory.ts";
-import {deferOptions} from "../../utils/deferOptions.ts";
 
 export default {
     data: new ChannelSelectMenuBuilder()
@@ -23,7 +22,7 @@ export default {
             await guildQuery.save();
             const row2 = new ActionRowBuilder<ChannelSelectMenuBuilder>()
                 .addComponents(setupTicketSelectSupportCategory.data);
-            await interaction.update({content: "Choisissez une catégorie maintenant", components: [row2]});
+            await interaction.update({content: "Choisissez une catégorie où les tickets seront crées", components: [row2]});
         } catch (error) {
             throw error;
         }

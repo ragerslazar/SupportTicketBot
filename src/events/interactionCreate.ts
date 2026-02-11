@@ -45,6 +45,8 @@ export default {
             if (error instanceof DiscordAPIError && error.code == 50013) {
                 await interaction.followUp({content: "❌ Erreur ! Permissions manquantes !", flags: MessageFlags.Ephemeral});
                 console.error(error.message);
+            } else if (error instanceof Error) {
+                await interaction.followUp({content: error.message, flags: MessageFlags.Ephemeral});
             } else {
                 await interaction.followUp({content: "❌ Une erreur est survenue !", flags: MessageFlags.Ephemeral})
                 console.error(error);

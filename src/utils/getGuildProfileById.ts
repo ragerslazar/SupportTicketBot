@@ -1,5 +1,4 @@
 import {guildProfile} from "../schemas/guildProfile.ts";
-import {MessageFlags} from "discord.js";
 
 export async function getGuildProfileById(interaction: any) {
     const guild = interaction.guildId;
@@ -8,9 +7,10 @@ export async function getGuildProfileById(interaction: any) {
     });
 
     if (!guildQuery) {
-        await interaction.message.delete();
-        await interaction.followUp({content: "Votre serveur n'a pas été enregistré par le bot. Veuillez utiliser la commande `/setup-ticket`", flags: MessageFlags.Ephemeral});
-        throw new Error("guildProfile not found in database.");
+        if (interaction.message) {
+            await interaction.message.delete();
+        }
+        throw new Error("Votre serveur n'a pas été enregistré par le bot. Veuillez utiliser la commande `/setup-ticket`");
     } else {
         return guildQuery;
     }

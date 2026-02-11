@@ -8,7 +8,7 @@ const commands = [];
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const foldersPath = path.join(__dirname, '../commands');
+const foldersPath = path.join(__dirname, '../interactions/commands');
 const commandFiles = fs.readdirSync(foldersPath).filter((file) => file.endsWith('.ts'));
 
 for (const file of commandFiles) {
@@ -21,7 +21,7 @@ for (const file of commandFiles) {
     }
 }
 
-const rest = new REST().setToken(TOKEN);
+const rest: REST = new REST().setToken(TOKEN);
 
 (async () => {
     try {

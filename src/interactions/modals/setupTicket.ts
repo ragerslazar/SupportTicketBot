@@ -11,7 +11,7 @@ import {deferOptions} from "../../utils/deferOptions.ts";
 
 const modal = new ModalBuilder()
     .setCustomId('setup-ticket-modal')
-    .setTitle('Personnalisation');
+    .setTitle('✨ Personnalisation');
 
 const mTicketMessageTitle = new TextInputBuilder()
     .setCustomId('ticket-message-title')
@@ -20,7 +20,7 @@ const mTicketMessageTitle = new TextInputBuilder()
 
 const mTicketMessageTitleLabel = new LabelBuilder()
     .setLabel("Titre")
-    .setDescription('Quel titre voulez vous donner à votre message pour créer les tickets ?')
+    .setDescription('⭐ Quel titre voulez vous donner à votre message pour créer les tickets ?')
     .setTextInputComponent(mTicketMessageTitle);
 
 const mTicketMessageContent = new TextInputBuilder()
@@ -30,7 +30,7 @@ const mTicketMessageContent = new TextInputBuilder()
 
 const mTicketMessageContentLabel = new LabelBuilder()
     .setLabel("Contenu")
-    .setDescription('Quel contenu voulez vous donner à votre message pour créer les tickets ?')
+    .setDescription('📰 Quel contenu voulez vous donner à votre message pour créer les tickets ?')
     .setTextInputComponent(mTicketMessageContent);
 
 modal.addLabelComponents(mTicketMessageTitleLabel, mTicketMessageContentLabel);
@@ -44,6 +44,6 @@ export default {
         const guildQuery = await getGuildProfileById(interaction);
         const target_channel = guildQuery.channelCreateTicket;
         await setupTicketMessage(target_channel, title, content, interaction);
-        await interaction.editReply({content: "Système de ticket mis en place ! ✅"});
+        await interaction.editReply({content: `Système de ticket mis en place ! ✅`});
     }
 }

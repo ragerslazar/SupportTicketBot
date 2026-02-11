@@ -10,11 +10,11 @@ import {modalHandler} from "./handlers/modalHandler.ts";
 export const client = new Client({ intents:
         [GatewayIntentBits.Guilds] });
 
-modalHandler(client);
-channelSelectMenuHandler(client);
-eventHandler(client);
-buttonHandler(client);
-commandHandler(client);
+await modalHandler(client);
+await channelSelectMenuHandler(client);
+await eventHandler(client);
+await buttonHandler(client);
+await commandHandler(client);
 
 
 (async () => {
