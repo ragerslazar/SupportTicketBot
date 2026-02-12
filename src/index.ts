@@ -8,7 +8,9 @@ import {channelSelectMenuHandler} from "./handlers/channelSelectMenuHandler.ts";
 import {modalHandler} from "./handlers/modalHandler.ts";
 
 export const client = new Client({ intents:
-        [GatewayIntentBits.Guilds] });
+        [GatewayIntentBits.Guilds,
+            GatewayIntentBits.GuildMessages,
+            GatewayIntentBits.MessageContent] });
 
 await modalHandler(client);
 await channelSelectMenuHandler(client);

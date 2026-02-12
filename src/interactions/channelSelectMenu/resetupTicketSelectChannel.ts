@@ -20,9 +20,9 @@ export default {
             guildQuery.channelCreateTicket = interaction.values[0];
 
             await guildQuery.save();
-            const row2 = new ActionRowBuilder<ChannelSelectMenuBuilder>()
+            const row = new ActionRowBuilder<ChannelSelectMenuBuilder>()
                 .addComponents(setupTicketSelectSupportCategory.data);
-            await interaction.update({content: "Choisissez une catégorie où les tickets seront crées", components: [row2]});
+            await interaction.update({content: "Choisissez une catégorie où les tickets seront crées", components: [row]});
         } catch (error) {
             throw error;
         }

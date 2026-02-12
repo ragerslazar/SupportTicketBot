@@ -1,18 +1,14 @@
  import {
-        ActionRowBuilder,
-        ButtonBuilder,
+        ActionRowBuilder, ChannelSelectMenuBuilder,
         ChannelType,
-        ChatInputCommandInteraction, EmbedBuilder, MessageFlags,
+        ChatInputCommandInteraction, MessageFlags,
         PermissionFlagsBits,
-        SlashCommandBuilder,
-        TextChannel
+        SlashCommandBuilder
 } from "discord.js";
 import {guildProfile} from "../../schemas/guildProfile.ts";
-import no_button from "../buttons/noButton.ts";
-import yes_button from "../buttons/yesButton.ts";
 import modal from "../modals/setupTicket.ts"
- import {getGuildProfileById} from "../../utils/getGuildProfileById.ts";
- import {deferOptions} from "../../utils/deferOptions.ts";
+ import ticketSelectLoggingChannel from "../channelSelectMenu/ticketSelectLoggingChannel.ts";
+ import setupTicketSelectSupportCategory from "../channelSelectMenu/resetupTicketSelectSupportCategory.ts";
 
 export default {
         data: new SlashCommandBuilder()
