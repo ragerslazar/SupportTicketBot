@@ -38,7 +38,7 @@ export async function checkExistingTickets(interaction: ButtonInteraction) {
     try {
         const guildQuery = await getGuildProfileById(interaction);
 
-        const supportCategory = guildQuery.supportCategoryId;
+        const supportCategory = guildQuery.supportCategoryId!;
 
         const category = interaction.guild!.channels.cache.get(supportCategory) as CategoryChannel;
         const channels = category.children.cache;
@@ -86,4 +86,30 @@ export async function checkExistingTickets(interaction: ButtonInteraction) {
     } catch (error) {
         throw error;
     }
+}
+
+export async function getAllMessagesFromChannel(channel: TextChannel){
+    let messages: string[] = [];
+    let message = await channel.messages
+        .fetch({ limit: 1 })
+        .then(messagePage => (messagePage.size === 1 ? messagePage.at(0) : null));
+
+    if (message && messages.length > 0) {
+        messages.push(`${message.author.tag} (${message.author.id}): ${message.content}`);
+    }
+
+    while (message) {
+        await channel.messages
+            .fetch({ limit: 100, before: message.id })
+            .then(messagePage => {
+                messagePage.forEach(msg => {
+                    if (msg.content.length > 0) {
+                        messages.push(`${msg.author.tag} (${msg.author.id}): ${msg.content}`);
+                    }
+                });
+
+                message = 0 < messagePage.size ? messagePage.at(messagePage.size - 1) : null;
+            });
+    }
+    return (messages.reverse()).join('\n');
 }
