@@ -2,36 +2,43 @@ import {
     ButtonInteraction,
     ChannelSelectMenuInteraction,
     ChatInputCommandInteraction, DiscordAPIError,
-    Events, MessageFlags, ModalSubmitInteraction
+    Events, MessageFlags, ModalSubmitInteraction, RoleSelectMenuInteraction
 } from "discord.js";
 
 export default {
     name: Events.InteractionCreate,
     once: false,
-    async execute(interaction: ChatInputCommandInteraction | ButtonInteraction | ChannelSelectMenuInteraction | ModalSubmitInteraction ): Promise<void> {
+    async execute(interaction: ChatInputCommandInteraction | ButtonInteraction | ChannelSelectMenuInteraction | ModalSubmitInteraction | RoleSelectMenuInteraction ): Promise<void> {
         try {
             let handler;
 
             if (interaction.isButton()) {
-                handler = interaction.client.buttons.get(interaction.customId);
+                handler = interaction.client.interactions_collection.get(interaction.customId);
                 if (!handler) {
                     console.error(`No button found.`);
                     return;
                 }
             } else if (interaction.isChatInputCommand()) {
-                handler = interaction.client.commands.get(interaction.commandName);
+                handler = interaction.client.interactions_collection.get(interaction.commandName);
                 if (!handler) {
                     console.error(`No command matching ${interaction.commandName} was found.`);
                     return;
                 }
             } else if (interaction.isChannelSelectMenu()) {
-                handler = interaction.client.channelSelectMenus.get(interaction.customId);
+                handler = interaction.client.interactions_collection.get(interaction.customId);
                 if (!handler) {
                     console.error(`No channel select menu found.`);
                     return;
                 }
-            } else if (interaction.isModalSubmit()) {
-                handler = interaction.client.modals.get(interaction.customId);
+            } else if (interaction.isRoleSelectMenu()) {
+                handler = interaction.client.interactions_collection.get(interaction.customId);
+                if (!handler) {
+                    console.error(`No role select menu found.`);
+                    return;
+                }
+            }
+            else if (interaction.isModalSubmit()) {
+                handler = interaction.client.interactions_collection.get(interaction.customId);
                 if (!handler) {
                     console.error(`No modal found.`);
                     return;

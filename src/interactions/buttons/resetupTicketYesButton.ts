@@ -5,7 +5,7 @@ import {
     ActionRowBuilder,
 } from "discord.js";
 
-import setupTicketSelectChannel from "../channelSelectMenu/resetupTicketSelectChannel.ts";
+import setupTicketSelectChannel from "../channelSelectMenu/setupTicketSelectChannel.ts";
 
 export default {
     data: new ButtonBuilder()

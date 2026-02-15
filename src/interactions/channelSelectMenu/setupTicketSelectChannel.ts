@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 
 import {getGuildProfileById} from "../../utils/getGuildProfileById.ts";
-import setupTicketSelectSupportCategory from "./resetupTicketSelectSupportCategory.ts";
+import setupTicketSelectSupportCategory from "./setupTicketSelectSupportCategory.ts";
 
 export default {
     data: new ChannelSelectMenuBuilder()
@@ -17,12 +17,12 @@ export default {
     async execute(interaction: ChannelSelectMenuInteraction) {
         try {
             const guildQuery = await getGuildProfileById(interaction);
-            guildQuery.channelCreateTicket = interaction.values[0];
+            guildQuery.channelCreateTicketId = interaction.values[0];
 
             await guildQuery.save();
-            const row2 = new ActionRowBuilder<ChannelSelectMenuBuilder>()
+            const row = new ActionRowBuilder<ChannelSelectMenuBuilder>()
                 .addComponents(setupTicketSelectSupportCategory.data);
-            await interaction.update({content: "Choisissez une catégorie où les tickets seront crées", components: [row2]});
+            await interaction.update({content: "Choisissez une catégorie où les tickets seront crées", components: [row]});
         } catch (error) {
             throw error;
         }

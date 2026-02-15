@@ -5,8 +5,8 @@ import {
     EmbedBuilder,
     SlashCommandBuilder, TextChannel
 } from "discord.js";
-import yes_button from "../buttons/yesButton.ts";
-import no_button from "../buttons/noButton.ts";
+import yes_button from "../buttons/resetupTicketYesButton.ts";
+import no_button from "../buttons/resetupTicketNoButton.ts";
 import {deferOptions} from "../../utils/deferOptions.ts";
 import {getGuildProfileById} from "../../utils/getGuildProfileById.ts";
 

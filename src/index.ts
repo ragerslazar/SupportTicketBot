@@ -1,20 +1,14 @@
 import {Client, GatewayIntentBits} from 'discord.js';
 import {MONGODB_URI, TOKEN} from "../config.ts";
 import {eventHandler} from "./handlers/eventHandler.ts";
-import {commandHandler} from "./handlers/commandHandler.ts";
 import mongoose from 'mongoose';
-import {buttonHandler} from "./handlers/buttonHandler.ts";
-import {channelSelectMenuHandler} from "./handlers/channelSelectMenuHandler.ts";
-import {modalHandler} from "./handlers/modalHandler.ts";
+import {interactionsHandler} from "./handlers/interactionsHandler.ts";
 
 export const client = new Client({ intents:
         [GatewayIntentBits.Guilds] });
 
-await modalHandler(client);
-await channelSelectMenuHandler(client);
 await eventHandler(client);
-await buttonHandler(client);
-await commandHandler(client);
+await interactionsHandler(client);
 
 
 (async () => {
