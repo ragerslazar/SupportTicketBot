@@ -1,8 +1,9 @@
 import {
     ButtonBuilder,
     ButtonInteraction,
-    ButtonStyle, MessageFlags,
+    ButtonStyle,
 } from "discord.js";
+import {deferOptions} from "../../utils/deferOptions.ts";
 
 export default {
     data: new ButtonBuilder()
@@ -10,7 +11,8 @@ export default {
         .setLabel('❌ Non')
         .setStyle(ButtonStyle.Danger),
     async execute(interaction: ButtonInteraction) {
-        await interaction.reply({content: "Annulation ❌", flags: MessageFlags.Ephemeral});
+        await interaction.deferReply(deferOptions);
+        await interaction.editReply("Annulation ❌");
         await interaction.message.delete();
         await interaction.editReply("Setup annulé !");
     }

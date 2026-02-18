@@ -8,6 +8,8 @@
     "build": "tsc",
     "deploy": "npx ts-node src/scripts/deployCommands.ts",
     "deploy-guild": "npx ts-node src/scripts/deployGuildCommands.ts",
+    "delete-command": "npx ts-node src/scripts/deleteCommand.ts",
+    "delete-guild-command": "npx ts-node src/scripts/deleteGuildCommand.ts",
     "start": "npx ts-node src/index.ts"
   },
   "dependencies": {

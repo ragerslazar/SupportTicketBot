@@ -1,8 +1,11 @@
 import {
+    ActionRowBuilder,
     ButtonBuilder,
     ButtonInteraction,
-    ButtonStyle
+    ButtonStyle, ChannelSelectMenuBuilder
 } from "discord.js";
+
+import setupTicketLoggingChannel from "../channelSelectMenu/setupTicketLoggingChannel.ts";
 
 export default {
     data: new ButtonBuilder()
@@ -11,6 +14,9 @@ export default {
         .setStyle(ButtonStyle.Success),
     async execute(interaction: ButtonInteraction) {
         await interaction.message.delete();
+        const row = new ActionRowBuilder<ChannelSelectMenuBuilder>()
+            .addComponents(setupTicketLoggingChannel.data);
 
+        await interaction.reply({content: "Selectionnez un channel ou sauvegarder les logs: ", components: [row]})
     }
 };

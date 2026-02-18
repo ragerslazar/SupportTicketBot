@@ -1,13 +1,13 @@
  import {
-        ActionRowBuilder, ChannelSelectMenuBuilder,
-        ChannelType,
-        ChatInputCommandInteraction, MessageFlags,
+        ActionRowBuilder, ButtonBuilder, ChannelSelectMenuBuilder,
+        ChatInputCommandInteraction, EmbedBuilder,
         PermissionFlagsBits,
         SlashCommandBuilder
 } from "discord.js";
-import setupTicketSelectChannel from "../channelSelectMenu/setupTicketSelectChannel.ts";
 import {guildProfile} from "../../schemas/guildProfile.ts";
-import modal from "../modals/setupTicket.ts"
+ import setupTicketSelectChannel from "../channelSelectMenu/setupTicketSelectChannel.ts";
+ import yes_button from "../buttons/resetupTicketYesButton.ts";
+ import no_button from "../buttons/resetupTicketNoButton.ts";
 
 export default {
         data: new SlashCommandBuilder()
@@ -26,7 +26,17 @@ export default {
                 });
 
                 if (guildQuery) {
-                        await interaction.reply({content: "Le système de ticket a déjà été mis en place sur ce serveur. Veuillez utiliser `/resetup-ticket` pour le modifier.", flags: MessageFlags.Ephemeral});
+                        const embed: EmbedBuilder = new EmbedBuilder()
+                            .setColor(0xff5555)
+                            .setTitle('⚠️ Le système de ticket est déjà mis en place sur ce serveur !')
+                            .setDescription("Souhaitez vous relancer la configuration dans le but de la modifier ?")
+                            .setTimestamp()
+                            .setFooter({ text: 'MDTicketBot Support' });
+
+                        const row = new ActionRowBuilder<ButtonBuilder>()
+                            .addComponents(yes_button.data, no_button.data);
+
+                        await interaction.reply({embeds: [embed], components: [row]});
                 } else {
                         guildQuery = new guildProfile({
                                 guildId: interaction.guildId,

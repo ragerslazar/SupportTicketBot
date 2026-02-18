@@ -49,14 +49,15 @@ export default {
                 await handler.execute(interaction);
             }
         } catch (error) {
+            console.error(error);
             if (error instanceof DiscordAPIError && error.code == 50013) {
-                await interaction.followUp({content: "❌ Erreur ! Permissions manquantes !", flags: MessageFlags.Ephemeral});
-                console.error(error.message);
+                await interaction.followUp({content: "❌ Erreur ! Permission(s) manquante(s) !", flags: MessageFlags.Ephemeral});
+            } else if (error instanceof DiscordAPIError && error.code == 50001) {
+                await interaction.followUp({content: `❌ Erreur ! Le bot n'a pas accès à un des channels !`, flags: MessageFlags.Ephemeral});
             } else if (error instanceof Error) {
                 await interaction.followUp({content: error.message, flags: MessageFlags.Ephemeral});
             } else {
                 await interaction.followUp({content: "❌ Une erreur est survenue !", flags: MessageFlags.Ephemeral})
-                console.error(error);
             }
         }
     }

@@ -1,13 +1,21 @@
 import {Schema, model} from 'mongoose';
 
 const guildSchema = new Schema({
+    staffRoles: {
+        type: String,
+        required: false
+    },
+    channelLoggingId: {
+        type: String,
+        required: false
+    },
     supportCategoryId: {
         type: String,
-        required: true,
+        required: false,
     },
-    channelCreateTicket: {
+    channelCreateTicketId: {
       type: String,
-      required: true,
+      required: false,
     },
     guildId: {
         type: String,

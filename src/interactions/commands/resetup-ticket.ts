@@ -17,7 +17,7 @@ export default {
         const guildQuery = await getGuildProfileById(interaction);
 
         if (guildQuery) {
-            const embed = new EmbedBuilder()
+            const embed: EmbedBuilder = new EmbedBuilder()
                 .setColor(0xff5555)
                 .setTitle('⚠️ Modification de la configuration des tickets')
                 .setDescription("Le système de ticket est déjà en place sur ce serveur.\n" +

@@ -1,9 +1,8 @@
-import {MOD_ROLE_ID} from "../../config.ts";
 import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonInteraction,
-    CategoryChannel, ChannelType,
+    CategoryChannel, ChannelType, Collection,
     EmbedBuilder,
     TextChannel
 } from "discord.js";
@@ -15,15 +14,14 @@ import {getGuildProfileById} from "../utils/getGuildProfileById.ts";
 export async function setupTicketMessage(target_channel: string, title: string, content: string, interaction: any): Promise<void> {
     try {
         const channel = interaction.guild!.channels.cache.get(target_channel) as TextChannel;
-        const message = new EmbedBuilder()
+        const message  = new EmbedBuilder()
             .setColor(0x0099ff)
             .setTitle(title)
             .setDescription(content)
             .setTimestamp()
             .setFooter({ text: 'MDTicketBot Support' });
 
-
-        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(createTicketButton.data);
+            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(createTicketButton.data);
 
         await channel.send({
             embeds: [message],
@@ -34,11 +32,11 @@ export async function setupTicketMessage(target_channel: string, title: string, 
     }
 }
 
-export async function checkExistingTickets(interaction: ButtonInteraction) {
+export async function checkExistingTickets(interaction: ButtonInteraction): Promise<void> {
     try {
         const guildQuery = await getGuildProfileById(interaction);
 
-        const supportCategory = guildQuery.supportCategoryId!;
+        const supportCategory: string = guildQuery.supportCategoryId!;
 
         const category = interaction.guild!.channels.cache.get(supportCategory) as CategoryChannel;
         const channels = category.children.cache;
@@ -47,7 +45,7 @@ export async function checkExistingTickets(interaction: ButtonInteraction) {
         if (existing_channel) {
             await interaction.editReply(`❌ Vous avez déjà un ticket en cours ! <#${existing_channel.id}>`)
         } else {
-            const userTicketChannel = await category.children.create({
+            const userTicketChannel: TextChannel = await category.children.create({
                 name: `ticket-${interaction.user.id}`,
                 type: ChannelType.GuildText,
                 topic: `Pseudo discord de l'utilisateur: ${interaction.user.tag}`,
@@ -58,11 +56,18 @@ export async function checkExistingTickets(interaction: ButtonInteraction) {
                 SendMessages: true,
                 ReadMessageHistory: true,
             })
+
             await interaction.editReply(`✅ Votre ticket <#${userTicketChannel.id}> a été crée !`)
 
-            await userTicketChannel.send(`<@${interaction.user.id}> <@&${MOD_ROLE_ID}>`);
+            const staffRoles: string | null | undefined = guildQuery.staffRoles;
 
-            const ticketEmbed = new EmbedBuilder()
+            if (staffRoles != undefined) {
+                await userTicketChannel.send(`<@${interaction.user.id}> ${staffRoles}`);
+            } else {
+                await userTicketChannel.send(`<@${interaction.user.id}>`);
+            }
+
+            const ticketEmbed: EmbedBuilder = new EmbedBuilder()
                 .setColor(0xff5555)
                 .setTitle('🎫 Ticket ouvert')
                 .setDescription(
@@ -88,7 +93,7 @@ export async function checkExistingTickets(interaction: ButtonInteraction) {
     }
 }
 
-export async function getAllMessagesFromChannel(channel: TextChannel){
+export async function getAllMessagesFromChannel(channel: TextChannel): Promise<string> {
     let messages: string[] = [];
     let message = await channel.messages
         .fetch({ limit: 1 })

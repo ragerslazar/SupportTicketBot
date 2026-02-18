@@ -11,11 +11,11 @@ export default {
     async execute(interaction: ButtonInteraction) {
         await interaction.deferReply();
         try {
-            const channel: TextChannel = interaction.channel as TextChannel;
-            const messages = await getAllMessagesFromChannel(channel);
             const guildQuery = await getGuildProfileById(interaction);
 
             if (guildQuery.channelLoggingId != undefined) {
+                const channel: TextChannel = interaction.channel as TextChannel;
+                const messages = await getAllMessagesFromChannel(channel);
                 const loggingChannel: TextChannel = interaction.guild!.channels.cache.get(guildQuery.channelLoggingId) as TextChannel;
 
                 const attachment = new AttachmentBuilder(Buffer.from(messages, 'utf-8'), { name: `${interaction.channelId}.txt` });

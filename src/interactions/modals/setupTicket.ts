@@ -42,7 +42,7 @@ export default {
         const content = interaction.fields.getTextInputValue("ticket-message-content");
         await interaction.deferReply(deferOptions);
         const guildQuery = await getGuildProfileById(interaction);
-        const target_channel = guildQuery.channelCreateTicket;
+        const target_channel = guildQuery.channelCreateTicketId!;
         await setupTicketMessage(target_channel, title, content, interaction);
         await interaction.editReply({content: `Système de ticket mis en place ! ✅`});
     }

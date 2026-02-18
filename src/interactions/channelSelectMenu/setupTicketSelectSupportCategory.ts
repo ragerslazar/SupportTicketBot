@@ -23,7 +23,7 @@ export default {
             await guildQuery.save();
             await interaction.message.delete();
 
-            const embed = new EmbedBuilder()
+            const embed: EmbedBuilder = new EmbedBuilder()
                 .setColor(0xff5555)
                 .setTitle('⚠️ Souhaitez vous ping certains rôles dans les tickets ?')
                 .setDescription("Vous aurez la possibilité lorsqu'un ticket est créer,\n" +
