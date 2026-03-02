@@ -1,15 +1,17 @@
 import {
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonInteraction,
-    CategoryChannel, ChannelType, Collection,
-    EmbedBuilder,
+    CategoryChannel, ChannelType,
+    EmbedBuilder, ModalSubmitInteraction,
     TextChannel
 } from "discord.js";
 
 import createTicketButton from "../interactions/buttons/createTicketButton.ts";
 import closeTicketButton from "../interactions/buttons/closeTicketButton.ts";
-import {getGuildProfileById} from "../utils/getGuildProfileById.ts";
+import claimTicket from "../interactions/buttons/claimTicketButton.ts";
+import {createTicketSchema, getGuildProfileById, getTicketInfo} from "../services/ticketServices.ts";
+import {EMBED_COLOR} from "../../config.ts";
+import {ticketSchema} from "../schemas/ticketSchema.ts";
 
 export async function setupTicketMessage(target_channel: string, title: string, content: string, interaction: any): Promise<void> {
     try {
@@ -32,24 +34,26 @@ export async function setupTicketMessage(target_channel: string, title: string, 
     }
 }
 
-export async function checkExistingTickets(interaction: ButtonInteraction): Promise<void> {
+export async function checkExistingTickets(interaction: ModalSubmitInteraction, username: string, ticket_content: string): Promise<void> {
     try {
         const guildQuery = await getGuildProfileById(interaction);
+        let ticketQuery = await getTicketInfo(interaction, "ownerId");
 
+        const isOwner: string | undefined = ticketQuery?.ownerId
         const supportCategory: string = guildQuery.supportCategoryId!;
 
         const category = interaction.guild!.channels.cache.get(supportCategory) as CategoryChannel;
-        const channels = category.children.cache;
-        const existing_channel = channels.find(channel => channel.name === `ticket-${interaction.user.id}`);
 
-        if (existing_channel) {
-            await interaction.editReply(`❌ Vous avez déjà un ticket en cours ! <#${existing_channel.id}>`)
+        if (isOwner) {
+            await interaction.editReply(`❌ Vous avez déjà un ticket en cours ! <#${ticketQuery!.channelId}>`)
         } else {
             const userTicketChannel: TextChannel = await category.children.create({
-                name: `ticket-${interaction.user.id}`,
+                name: `ticket-${interaction.user.tag}`,
                 type: ChannelType.GuildText,
                 topic: `Pseudo discord de l'utilisateur: ${interaction.user.tag}`,
             });
+
+            await createTicketSchema(interaction, userTicketChannel);
 
             await userTicketChannel.permissionOverwrites.create(interaction.user.id, {
                 ViewChannel: true,
@@ -68,24 +72,30 @@ export async function checkExistingTickets(interaction: ButtonInteraction): Prom
             }
 
             const ticketEmbed: EmbedBuilder = new EmbedBuilder()
-                .setColor(0xff5555)
+                .setColor(EMBED_COLOR)
                 .setTitle('🎫 Ticket ouvert')
                 .setDescription(
-                    'Bonjour 👋\n\n' +
-                    'Merci d’avoir ouvert un ticket.\n' +
-                    'Expliquez clairement votre problème ou votre demande, ' +
-                    'un membre du staff vous répondra dès que possible.'
+                    "Pseudo:" +
+                    '```' +
+                    `${username}` +
+                    '```' +
+                    'Descritpion du problème / demande' +
+                    '```' +
+                    `${ticket_content}` +
+                    '```' +
+                    '\nMerci de rester polis et patient avec le staff.\nVeuillez également ne pas les mentionner.'
                 )
                 .setTimestamp()
                 .setFooter({ text: 'MDTicketBot Support' });
 
 
-            const closeRow = new ActionRowBuilder<ButtonBuilder>()
-                .addComponents(closeTicketButton.data);
+            const row = new ActionRowBuilder<ButtonBuilder>()
+                .addComponents(claimTicket.data ,closeTicketButton.data);
+
 
             await userTicketChannel.send({
                 embeds: [ticketEmbed],
-                components: [closeRow]
+                components: [row]
             });
         }
     } catch (error) {
@@ -99,9 +109,9 @@ export async function getAllMessagesFromChannel(channel: TextChannel): Promise<s
         .fetch({ limit: 1 })
         .then(messagePage => (messagePage.size === 1 ? messagePage.at(0) : null));
 
-    if (message && messages.length > 0) {
-        messages.push(`${message.author.tag} (${message.author.id}): ${message.content}`);
-    }
+    // if (message && messages.length > 0) {
+    //     messages.push(`${message.author.tag} (${message.author.id}): ${message.content}`);
+    // }
 
     while (message) {
         await channel.messages

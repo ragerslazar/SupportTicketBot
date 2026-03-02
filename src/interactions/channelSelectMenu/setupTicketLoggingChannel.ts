@@ -4,7 +4,7 @@ import {
     ChannelType
 } from "discord.js";
 
-import {getGuildProfileById} from "../../utils/getGuildProfileById.ts";
+import {updateGuildProfileField} from "../../services/ticketServices.ts";
 import modalCustomMessageTicket from "../modals/setupTicket.ts"
 
 export default {
@@ -15,10 +15,7 @@ export default {
 
     async execute(interaction: ChannelSelectMenuInteraction) {
         try {
-            const guildQuery = await getGuildProfileById(interaction);
-            guildQuery.channelLoggingId = interaction.values[0];
-
-            await guildQuery.save();
+            await updateGuildProfileField(interaction, "channelLoggingId", interaction.values[0]);
             await interaction.message.delete();
             await interaction.showModal(modalCustomMessageTicket.data);
         } catch (error) {

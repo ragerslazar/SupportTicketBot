@@ -5,10 +5,10 @@ import {
     RoleSelectMenuBuilder,
     RoleSelectMenuInteraction
 } from "discord.js";
-import {getGuildProfileById} from "../../utils/getGuildProfileById.ts";
+import {getGuildProfileById, updateGuildProfileField} from "../../services/ticketServices.ts";
 import no_button from "../buttons/setupTicketLoggingNoButton.ts";
 import yes_button from "../buttons/setupTicketLoggingYesButton.ts";
-import {guildProfile} from "../../schemas/guildProfile.ts";
+import {guildProfileSchema} from "../../schemas/guildProfileSchema.ts";
 export default {
     data: new RoleSelectMenuBuilder()
         .setCustomId("ticket-roles-select-pinged")
@@ -19,10 +19,7 @@ export default {
         await interaction.deferReply();
         const selectedRoles = interaction.roles;
         const roleList = selectedRoles.map(role => `<@&${role.id}>`).join(' ');
-        const guildQuery = await getGuildProfileById(interaction);
-
-        guildQuery.staffRoles = roleList;
-        await guildQuery.save();
+        await updateGuildProfileField(interaction, "staffRoles", roleList);
         await interaction.message.delete();
 
         const embed: EmbedBuilder = new EmbedBuilder()

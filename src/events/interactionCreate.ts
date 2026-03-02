@@ -10,6 +10,7 @@ export default {
     once: false,
     async execute(interaction: ChatInputCommandInteraction | ButtonInteraction | ChannelSelectMenuInteraction | ModalSubmitInteraction | RoleSelectMenuInteraction ): Promise<void> {
         try {
+            if (!interaction.inGuild()) return;
             let handler;
 
             if (interaction.isButton()) {
@@ -51,13 +52,13 @@ export default {
         } catch (error) {
             console.error(error);
             if (error instanceof DiscordAPIError && error.code == 50013) {
-                await interaction.followUp({content: "❌ Erreur ! Permission(s) manquante(s) !", flags: MessageFlags.Ephemeral});
+                await interaction.followUp({content: "❌ Erreur ! Permission(s) manquante(s) !"});
             } else if (error instanceof DiscordAPIError && error.code == 50001) {
-                await interaction.followUp({content: `❌ Erreur ! Le bot n'a pas accès à un des channels !`, flags: MessageFlags.Ephemeral});
+                await interaction.followUp({content: `❌ Erreur ! Le bot n'a pas accès à un des channels !`});
             } else if (error instanceof Error) {
-                await interaction.followUp({content: error.message, flags: MessageFlags.Ephemeral});
+                await interaction.followUp({content: error.message});
             } else {
-                await interaction.followUp({content: "❌ Une erreur est survenue !", flags: MessageFlags.Ephemeral})
+                await interaction.followUp({content: "❌ Une erreur est survenue !"})
             }
         }
     }

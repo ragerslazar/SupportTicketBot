@@ -4,8 +4,8 @@ import {eventHandler} from "./handlers/eventHandler.ts";
 import mongoose from 'mongoose';
 import {interactionsHandler} from "./handlers/interactionsHandler.ts";
 
-export const client = new Client({ intents:
-        [GatewayIntentBits.Guilds] });
+const client = new Client({ intents:
+        [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent], });
 
 await eventHandler(client);
 await interactionsHandler(client);

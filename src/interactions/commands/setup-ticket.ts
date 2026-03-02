@@ -4,10 +4,11 @@
         PermissionFlagsBits,
         SlashCommandBuilder
 } from "discord.js";
-import {guildProfile} from "../../schemas/guildProfile.ts";
+import {guildProfileSchema} from "../../schemas/guildProfileSchema.ts";
  import setupTicketSelectChannel from "../channelSelectMenu/setupTicketSelectChannel.ts";
  import yes_button from "../buttons/resetupTicketYesButton.ts";
  import no_button from "../buttons/resetupTicketNoButton.ts";
+ import {createGuildProfileSchema} from "../../services/ticketServices.ts";
 
 export default {
         data: new SlashCommandBuilder()
@@ -21,7 +22,7 @@ export default {
                         return;
                 }
 
-                let guildQuery = await guildProfile.findOne({
+                let guildQuery = await guildProfileSchema.findOne({
                         guildId: interaction.guildId
                 });
 
@@ -38,10 +39,7 @@ export default {
 
                         await interaction.reply({embeds: [embed], components: [row]});
                 } else {
-                        guildQuery = new guildProfile({
-                                guildId: interaction.guildId,
-                        });
-                        await guildQuery.save();
+                        guildQuery = await createGuildProfileSchema(interaction);
                         const row = new ActionRowBuilder<ChannelSelectMenuBuilder>()
                             .addComponents(setupTicketSelectChannel.data);
 

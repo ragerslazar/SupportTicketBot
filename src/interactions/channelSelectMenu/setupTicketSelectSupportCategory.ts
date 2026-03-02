@@ -4,7 +4,7 @@ import {
     ChannelSelectMenuInteraction,
     ChannelType, EmbedBuilder,
 } from "discord.js";
-import {getGuildProfileById} from "../../utils/getGuildProfileById.ts";
+import {updateGuildProfileField} from "../../services/ticketServices.ts";
 import yes_button from "../buttons/setupTicketSelectRoleYesButton.ts";
 import no_button from "../buttons/setupTicketSelectRoleNoButton.ts";
 
@@ -17,10 +17,7 @@ export default {
     async execute(interaction: ChannelSelectMenuInteraction):Promise<void> {
         try {
             await interaction.deferReply();
-            const guildQuery = await getGuildProfileById(interaction);
-
-            guildQuery.supportCategoryId = interaction.values[0];
-            await guildQuery.save();
+            await updateGuildProfileField(interaction, "supportCategoryId", interaction.values[0]);
             await interaction.message.delete();
 
             const embed: EmbedBuilder = new EmbedBuilder()

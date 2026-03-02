@@ -1,7 +1,18 @@
-import {AttachmentBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, TextChannel} from "discord.js";
+import {
+    AttachmentBuilder,
+    ButtonBuilder,
+    ButtonInteraction,
+    ButtonStyle,
+    GuildMember,
+    PermissionFlagsBits,
+    TextChannel
+} from "discord.js";
 import {delay} from "../../utils/delay.ts";
 import {getAllMessagesFromChannel} from "../../functions/tickets.ts";
-import {getGuildProfileById} from "../../utils/getGuildProfileById.ts";
+import {
+    deleteRecordFromDatabase,
+    getGuildProfileById, getTicketInfo
+} from "../../services/ticketServices.ts";
 
 export default {
     data: new ButtonBuilder()
@@ -12,21 +23,33 @@ export default {
         await interaction.deferReply();
         try {
             const guildQuery = await getGuildProfileById(interaction);
+            const ticketQuery = await getTicketInfo(interaction, "channelId");
 
-            if (guildQuery.channelLoggingId != undefined) {
+            if (guildQuery.channelLoggingId) {
                 const channel: TextChannel = interaction.channel as TextChannel;
                 const messages = await getAllMessagesFromChannel(channel);
                 const loggingChannel: TextChannel = interaction.guild!.channels.cache.get(guildQuery.channelLoggingId) as TextChannel;
 
-                const attachment = new AttachmentBuilder(Buffer.from(messages, 'utf-8'), { name: `${interaction.channelId}.txt` });
+                const attachment = new AttachmentBuilder(Buffer.from(messages, 'utf-8'), { name: `${ticketQuery!.ownerId}.txt` });
                 await loggingChannel.send({
+                    content: `ownerId: ${ticketQuery!.ownerId}`,
                     files: [attachment]
                 });
             }
 
-            await interaction.editReply("❌ Fermeture du ticket dans 5 secondes...");
+            const isOwner: boolean = interaction.user.id === ticketQuery!.ownerId;
+            const isClaimer: boolean = interaction.user.id === ticketQuery!.claimedBy;
+            const isAdmin: boolean = (interaction.member as GuildMember).permissions.has(PermissionFlagsBits.Administrator);
+
+            if (ticketQuery?.claimedBy && !isOwner && !isClaimer && !isAdmin) {
+                await interaction.deleteReply();
+                return;
+            }
+            await interaction.editReply(`❌ <@${ticketQuery!.ownerId}> Fermeture du ticket dans 5 secondes...`);
             await delay(5000);
             await interaction.channel!.delete();
+
+            await deleteRecordFromDatabase(ticketQuery);
         } catch (error) {
             throw error;
         }

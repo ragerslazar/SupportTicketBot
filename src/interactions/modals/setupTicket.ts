@@ -6,10 +6,10 @@ import {
     TextInputStyle
 } from "discord.js";
 import {setupTicketMessage} from "../../functions/tickets.ts";
-import {getGuildProfileById} from "../../utils/getGuildProfileById.ts";
+import {getGuildProfileById} from "../../services/ticketServices.ts";
 import {deferOptions} from "../../utils/deferOptions.ts";
 
-const modal = new ModalBuilder()
+const modal: ModalBuilder = new ModalBuilder()
     .setCustomId('setup-ticket-modal')
     .setTitle('✨ Personnalisation');
 
@@ -18,17 +18,17 @@ const mTicketMessageTitle = new TextInputBuilder()
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 
-const mTicketMessageTitleLabel = new LabelBuilder()
+const mTicketMessageTitleLabel: LabelBuilder = new LabelBuilder()
     .setLabel("Titre")
     .setDescription('⭐ Quel titre voulez vous donner à votre message pour créer les tickets ?')
     .setTextInputComponent(mTicketMessageTitle);
 
-const mTicketMessageContent = new TextInputBuilder()
+const mTicketMessageContent: TextInputBuilder = new TextInputBuilder()
     .setCustomId('ticket-message-content')
     .setStyle(TextInputStyle.Paragraph)
     .setRequired(true);
 
-const mTicketMessageContentLabel = new LabelBuilder()
+const mTicketMessageContentLabel: LabelBuilder = new LabelBuilder()
     .setLabel("Contenu")
     .setDescription('📰 Quel contenu voulez vous donner à votre message pour créer les tickets ?')
     .setTextInputComponent(mTicketMessageContent);

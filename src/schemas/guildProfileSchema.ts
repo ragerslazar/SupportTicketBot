@@ -25,4 +25,4 @@ const guildSchema = new Schema({
 
 }, {timestamps: true});
 
-export const guildProfile = model("guildProfile", guildSchema);
+export const guildProfileSchema = model("guildProfileSchema", guildSchema);

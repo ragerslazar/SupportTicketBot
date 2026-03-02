@@ -4,8 +4,7 @@ import {
     ButtonStyle
 } from "discord.js";
 import modalCustomMessageTicket from "../modals/setupTicket.ts"
-import {getGuildProfileById} from "../../utils/getGuildProfileById.ts";
-import {guildProfile} from "../../schemas/guildProfile.ts";
+import {deleteChannelLoggingId} from "../../services/ticketServices.ts";
 
 export default {
     data: new ButtonBuilder()
@@ -15,10 +14,7 @@ export default {
     async execute(interaction: ButtonInteraction) {
         await interaction.message.delete();
 
-        await guildProfile.findOneAndUpdate(
-            { guildId: interaction.guildId },
-            { $unset: { channelLoggingId: "" } }
-        );
+        await deleteChannelLoggingId(interaction)
 
         await interaction.showModal(modalCustomMessageTicket.data);
     }

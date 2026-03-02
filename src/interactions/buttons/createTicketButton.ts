@@ -1,6 +1,5 @@
 import {ButtonBuilder, ButtonInteraction, ButtonStyle} from "discord.js";
-import {deferOptions} from "../../utils/deferOptions.ts";
-import {checkExistingTickets} from "../../functions/tickets.ts";
+import ticketForm from "../modals/ticketForm.ts"
 
 
 export default {
@@ -10,7 +9,6 @@ export default {
         .setStyle(ButtonStyle.Primary),
 
     async execute(interaction: ButtonInteraction): Promise<void> {
-        await interaction.deferReply(deferOptions);
-        await checkExistingTickets(interaction);
+        await interaction.showModal(ticketForm.data)
     }
 };
