@@ -28,7 +28,7 @@ const mTicketContentInput: TextInputBuilder = new TextInputBuilder()
     .setRequired(true);
 
 const mTicketContentLabel: LabelBuilder = new LabelBuilder()
-    .setLabel("Description de votre demande / problème")
+    .setLabel("Objet")
     .setDescription('Expliquez ici la raison de votre demande:')
     .setTextInputComponent(mTicketContentInput);
 

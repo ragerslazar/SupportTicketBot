@@ -24,17 +24,10 @@ export async function getGuildProfileById(interaction: any) {
     }
 }
 
-export async function deleteChannelLoggingId(interaction: any): Promise<void> {
+export async function deleteGuildProfileField(interaction: any, fieldName: string): Promise<void> {
     await guildProfileSchema.findOneAndUpdate(
         { guildId: interaction.guildId },
-        { $unset: { channelLoggingId: "" } }
-    );
-}
-
-export async function deleteStaffRoles(interaction: any): Promise<void> {
-    await guildProfileSchema.findOneAndUpdate(
-        { guildId: interaction.guildId },
-        { $unset: { staffRoles: "" } }
+        { $unset: { [fieldName]: "" } }
     );
 }
 
@@ -45,11 +38,9 @@ export async function getTicketInfo(interaction: ButtonInteraction | ModalSubmit
     } else if (q == "ownerId") {
         data = interaction.user.id
     }
-    let ticketQuery = await ticketSchema.findOne({
+    return  ticketSchema.findOne({
         channelId: data
     });
-
-    return ticketQuery;
 }
 
 export async function deleteRecordFromDatabase(query: HydratedDocument<any>): Promise<void> {
@@ -69,14 +60,15 @@ export async function createTicketSchema(interaction: ModalSubmitInteraction, ti
     }).save();
 }
 
-export async function updateGuildProfileField(interaction: ChannelSelectMenuInteraction | RoleSelectMenuInteraction, fieldName: string, fieldValue: any) {
+export async function updateGuildProfileField(interaction: ChannelSelectMenuInteraction | RoleSelectMenuInteraction, fieldName: string, fieldValue: any): Promise<void> {
     await guildProfileSchema.findOneAndUpdate(
         {guildId: interaction.guildId},
         {$set: {[fieldName]: fieldValue}});
 }
 
 export async function updateTicketField(interaction: any, fieldName: string, fieldValue: any) {
-    await ticketSchema.findOneAndUpdate(
+    return ticketSchema.findOneAndUpdate(
         {guildId: interaction.guildId},
-        {$set: {[fieldName]: fieldValue}});
+        {$set: {[fieldName]: fieldValue}},
+        {new: true});
 }

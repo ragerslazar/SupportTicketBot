@@ -10,7 +10,7 @@ import {
 
 import closeTicketButton from "../../interactions/buttons/closeTicketButton.ts";
 import {deferOptions} from "../../utils/deferOptions.ts";
-import {getTicketInfo} from "../../services/ticketServices.ts";
+import {getTicketInfo, updateTicketField} from "../../services/ticketServices.ts";
 
 export default {
     data: new ButtonBuilder()
@@ -40,8 +40,7 @@ export default {
             SendMessages: true
         })
 
-        ticketQuery!.claimedBy = interaction.user.id;
-        await ticketQuery!.save()
+        await updateTicketField(interaction, "claimedBy", interaction.user.id)
 
         await interaction.deleteReply();
         await ticket_channel.send(`<@${ticketQuery!.ownerId}>, <@${member.id}> va traiter votre demande !`);

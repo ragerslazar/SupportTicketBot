@@ -2,7 +2,7 @@ import {Schema, model} from 'mongoose';
 
 const guildSchema = new Schema({
     staffRoles: {
-        type: String,
+        type: String, //array
         required: false
     },
     channelLoggingId: {

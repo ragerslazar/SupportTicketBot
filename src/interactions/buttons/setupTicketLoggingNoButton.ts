@@ -4,7 +4,7 @@ import {
     ButtonStyle
 } from "discord.js";
 import modalCustomMessageTicket from "../modals/setupTicket.ts"
-import {deleteChannelLoggingId} from "../../services/ticketServices.ts";
+import {deleteGuildProfileField} from "../../services/ticketServices.ts";
 
 export default {
     data: new ButtonBuilder()
@@ -14,7 +14,7 @@ export default {
     async execute(interaction: ButtonInteraction) {
         await interaction.message.delete();
 
-        await deleteChannelLoggingId(interaction)
+        await deleteGuildProfileField(interaction, "channelLoggingId")
 
         await interaction.showModal(modalCustomMessageTicket.data);
     }

@@ -12,7 +12,14 @@ await interactionsHandler(client);
 
 
 (async () => {
-    await mongoose.connect(MONGODB_URI);
-    console.log(`MongoDB Connected`);
-    client.login(TOKEN);
+    try {
+        await mongoose.connect(MONGODB_URI);
+        console.log(`MongoDB Connected`);
+        await client.login(TOKEN);
+    } catch (e) {
+        if (e instanceof mongoose.Error.MongooseServerSelectionError) {
+            console.error("Unauthorized IP address !");
+        }
+    }
+
 })();

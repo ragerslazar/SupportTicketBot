@@ -79,7 +79,7 @@ export async function checkExistingTickets(interaction: ModalSubmitInteraction, 
                     '```' +
                     `${username}` +
                     '```' +
-                    'Descritpion du problème / demande' +
+                    'Objet de la demande' +
                     '```' +
                     `${ticket_content}` +
                     '```' +

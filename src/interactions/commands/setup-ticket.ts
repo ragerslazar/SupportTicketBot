@@ -18,7 +18,7 @@ export default {
 
         async execute(interaction: ChatInputCommandInteraction):Promise<void> {
                 if (!interaction.inGuild()) {
-                        await interaction.reply("Cette commande ne peux être executée seulement sur un serveur.");
+                        await interaction.reply("Cette commande ne peut être executée seulement sur un serveur.");
                         return;
                 }
 

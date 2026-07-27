@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import no_button from "../buttons/setupTicketLoggingNoButton.ts";
 import yes_button from "../buttons/setupTicketLoggingYesButton.ts";
-import {deleteStaffRoles} from "../../services/ticketServices.ts";
+import {deleteGuildProfileField} from "../../services/ticketServices.ts";
 
 export default {
     data: new ButtonBuilder()
@@ -16,7 +16,7 @@ export default {
     async execute(interaction: ButtonInteraction) {
         await interaction.message.delete();
 
-        await deleteStaffRoles(interaction);
+        await deleteGuildProfileField(interaction, "staffRoles");
 
         const embed: EmbedBuilder = new EmbedBuilder()
             .setColor(0xff5555)
